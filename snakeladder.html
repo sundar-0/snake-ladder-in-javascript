@@ -80,6 +80,8 @@
 <script>
     var initial_flag=[1,1,1];
     var turn=[];
+    var snake=[{'head':97,'tail':77},{'head':83,'tail':63},{'head':58,'tail':38},{'head':41,'tail':21},{'head':36,'tail':16}]
+    var ladder=[{'from':2,'to':22},{'from':30,'to':50},{'from':42,'to':62},{'from':56,'to':76},{'from':75,'to':95}]
     initialize_players("player1");
     function initialize_players(playerName){
     const players=document.createElement('div')
@@ -97,19 +99,40 @@
     
 
     function moveStep(currplayer,randNo){
+        var target;
         console.log(initial_flag)
         console.log("Hami move step bhitra xam hai guys")
         console.log("move step bhite")
         var source=document.getElementById("player"+currplayer);
         var current_div=source.parentNode.id;
         var curr_pos=parseInt(current_div.slice(3,))
-        console.log(typeof(curr_pos))
+        if((snake.filter((item,index)=>item['head']===curr_pos).length!==0))
+        {
+            snake.map((item,index)=>{
+            console.log(item['tail'])
+                if (item['head']===curr_pos){
+                    target=document.getElementById("div"+item['tail']);
+                }
+            })
+        }
+        else if((ladder.filter((item,index)=>item['from']===curr_pos).length!==0))
+        {
+            ladder.map((item,index)=>{
+            console.log(item['to'])
+            if (item['from']===curr_pos){
+                target=document.getElementById("div"+item['to']);
+            }
+        })
+        }
+        else
+        {
         var step_to_move=curr_pos+randNo
-        console.log(step_to_move)
-        var target=document.getElementById("div"+step_to_move);
-        console.log(target.id)
+        target=document.getElementById("div"+step_to_move);
+        }
+        target.style.display="flex"
         target.appendChild(source)
     }
+    
     function moveToStart(currplayer){
         console.log("Current Player is",currplayer)
         var source=document.getElementById("player"+currplayer);
@@ -201,47 +224,36 @@
         if(x===1)
         document.getElementById("div"+x).appendChild(document.createTextNode("(Start)"));  
     }
+        snake.map((item,index)=>{
+            var image=document.createElement('img');
+            image.src="https://cdn.pixabay.com/photo/2016/03/31/15/10/cartoon-1293047_960_720.png";
+            image.id="snake"+index
+            document.getElementById("div"+item['head']).appendChild(image);
+            document.getElementById("div"+item['head']).style.zIndex=1;
+            if(item['head']===83||item['head']===36 || item['head']===41){
+                document.getElementById("snake"+index).style.transform='rotateY(140deg)';  
+            }
+            document.getElementById("snake"+index).style.marginTop="-45px";
+            document.getElementById("snake"+index).style.verticalAlign="middle";
+            document.getElementById("snake"+index).style.width="100%";
+            document.getElementById("snake"+index).style.height="320px";
 
-    snake=[97,83,58,41,36];
-    ladder=[2,42,30,56,75];   
-    for (let i in snake)
-    {
 
-        var image=document.createElement('img');
-        image.src="https://cdn.pixabay.com/photo/2016/03/31/15/10/cartoon-1293047_960_720.png";
-        image.id="snake"+snake[i];
-        document.getElementById("div"+snake[i]).appendChild(image);
-        document.getElementById("div"+snake[i]).style.zIndex=1;
-    
-        if(snake[i]===83||snake[i]===36 || snake[i]===41){
-            document.getElementById("snake"+snake[i]).style.transform='rotateY(140deg)';
-           
-        }
+    })
 
-        document.getElementById("snake"+snake[i]).style.marginTop="-45px";
-        document.getElementById("snake"+snake[i]).style.verticalAlign="middle";
-        document.getElementById("snake"+snake[i]).style.width="100%";
-        document.getElementById("snake"+snake[i]).style.height="320px";
-    
-    }
+        ladder.map((item,index)=>{
+                var image=document.createElement('img');
+                image.src="https://cdn.pixabay.com/photo/2017/09/28/01/32/ladder-2794042_960_720.png";
+                image.id="ladder"+index
+                document.getElementById("div"+item['from']).appendChild(image);
+                document.getElementById("div"+item['from']).style.zIndex=2;
+                document.getElementById("ladder"+index).style.marginTop="-260px";
+                document.getElementById("ladder"+index).style.verticalAlign="middle";
+                document.getElementById("ladder"+index).style.width="100%";
+                document.getElementById("ladder"+index).style.height="250px";
 
-    for (let i in ladder)
-    {
 
-        var image=document.createElement('img');
-        image.src="https://cdn.pixabay.com/photo/2017/09/28/01/32/ladder-2794042_960_720.png";
-        image.id="ladder"+ladder[i];
-        document.getElementById("div"+ladder[i]).appendChild(image);
-        document.getElementById("div"+ladder[i]).style.zIndex=2;
-   
-
-        document.getElementById("ladder"+ladder[i]).style.marginTop="-260px";
-        document.getElementById("ladder"+ladder[i]).style.verticalAlign="middle";
-        document.getElementById("ladder"+ladder[i]).style.width="100%";
-        document.getElementById("ladder"+ladder[i]).style.height="250px";
-    
-    }
-
+        })
     function rollDice(){     
        let randNo=Math.floor(Math.random() * 6) + 1;
        document.getElementById("dice").innerHTML =randNo;
