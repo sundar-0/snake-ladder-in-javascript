@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
+}
+.grid-item {
+  height:60px;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 30px;
+  color:#f2f2f2;
+  text-align: center;
+}
+ .grid-item:nth-child(odd){
+    background-color: coral;
+}
+.grid-item:nth-child(even){
+    background-color: seagreen;
+}
+.grid-item:nth-last-child(100){
+    background-color:gray;
+}
+
+.player1{
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+    background-color: red;
+    color:#f2f2f2;
+    border:4px solid red;
+}
+.player2{
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+    background-color: green;
+    color:#f2f2f2;
+    border:4px solid green;
+}
+.player3{
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+    background-color: yellow;
+    color:rgb(64, 207, 243);
+    border:4px solid yellow;
+}
+.dice{
+    padding: 4px;  
+    background-color: tomato;  
+    width: 104px;  
+    height: 104px;  
+    border-radius: 10%;
+}
+
+.players{
+    display: inline-block;
+    padding: 10px;
+}
+
+</style>
+</head>
+<body>
+<div class="grid-container">
+
+
+</div>
+<hr>
+<button class="dice" id="dice" onclick="rollDice()">Roll</button>
+
+
+<!-- <button class="player1" id="player1">player 1</button>
+<button class="player2" id="player2">player 2</button>
+<button class="player3" id="player3">player 3</button> -->
+
+<script>
+    var initial_flag=[1,1,1];
+    var turn=[];
+    initialize_players("player1");
+    function initialize_players(playerName){
+    const players=document.createElement('div')
+    players.id="players"
+    players.className="players"
+    document.body.appendChild(players);
+    const player=document.createElement('button');
+    player.id=playerName;
+    player.className=playerName;
+    document.querySelector(".players").appendChild(player);
+    document.getElementById(playerName).innerHTML=playerName
+    turn.push(playerName);
+    }
+    
+    
+
+    function moveStep(currplayer,randNo){
+        console.log(initial_flag)
+        console.log("Hami move step bhitra xam hai guys")
+        console.log("move step bhite")
+        var source=document.getElementById("player"+currplayer);
+        var current_div=source.parentNode.id;
+        var curr_pos=parseInt(current_div.slice(3,))
+        console.log(typeof(curr_pos))
+        var step_to_move=curr_pos+randNo
+        console.log(step_to_move)
+        var target=document.getElementById("div"+step_to_move);
+        console.log(target.id)
+        target.appendChild(source)
+    }
+    function moveToStart(currplayer){
+        console.log("Current Player is",currplayer)
+        var source=document.getElementById("player"+currplayer);
+        var target=document.getElementById("div1");
+        target.style.display="flex"
+        var div=document.createElement('div')
+        target.appendChild(source);
+    }
+
+
+
+
+    function changeTurn(randNo,initial_flag){
+        console.log("Random number hai change turn bhitra ko",randNo)
+        var currplayer=turn.length
+        var nextplayer=currplayer+1;
+        if(randNo===1)
+        {
+            if(initial_flag[currplayer-1]!==0)
+            {             
+            console.log("current player with random number 1 is",currplayer)
+            initial_flag[currplayer-1]=0;
+            moveToStart(currplayer);
+                    
+            }
+            else{
+                moveStep(currplayer,randNo);
+            }
+        
+        }
+        else
+        { 
+                console.log(initial_flag)
+                var currplayer=turn.length
+                var nextplayer=currplayer+1;
+                console.log(initial_flag)
+                console.log("hamro current player:",currplayer)
+                console.log("hamro next player kun ho?",nextplayer)
+
+                console.log("current player ko flag k xa(start bhitra xiryo kinai?)",initial_flag[currplayer-1])
+                if(initial_flag[currplayer-1]!==0)
+                //yedi flag 1 xa vaney
+                {
+                console.log("flag 1 nai xa matlab start ma aaxaina gotti")
+                //yedi turn ko length 3 xa vaney
+                if(currplayer===3){
+                    turn.length=0;
+                    document.querySelector('.players').remove();
+                    initialize_players("player1");
+                }
+                else{
+                    initialize_players("player"+nextplayer)
+                }
+                }
+                //yedi flag 0 xa vaney
+                else
+                {
+                    console.log("flag 0 xa matlab start ma aaisakyo gotti")
+                    moveStep(currplayer,randNo)
+                    
+                //yedi turn ko length 3 xa vaney
+                if(currplayer===3){
+                    turn.length=0;
+                    document.querySelector('.players').remove();
+                    initialize_players("player1");
+                }
+                else{
+                    initialize_players("player"+nextplayer)
+                }
+                   
+                }       
+            
+            }
+
+        }
+  
+
+    
+
+    for(x=100; x>=1;x--){
+        var board = document.createElement('div');
+        board.id = "div"+x;
+        board.className="grid-item";
+   
+        document.querySelector('.grid-container').appendChild(board);
+        document.getElementById("div"+x).appendChild(document.createTextNode(x));     
+        if(x===100)
+        document.getElementById("div"+x).appendChild(document.createTextNode("(Game)"));     
+        if(x===1)
+        document.getElementById("div"+x).appendChild(document.createTextNode("(Start)"));  
+    }
+
+    snake=[97,83,58,41,36];
+    ladder=[2,42,30,56,75];   
+    for (let i in snake)
+    {
+
+        var image=document.createElement('img');
+        image.src="https://cdn.pixabay.com/photo/2016/03/31/15/10/cartoon-1293047_960_720.png";
+        image.id="snake"+snake[i];
+        document.getElementById("div"+snake[i]).appendChild(image);
+        document.getElementById("div"+snake[i]).style.zIndex=1;
+    
+        if(snake[i]===83||snake[i]===36 || snake[i]===41){
+            document.getElementById("snake"+snake[i]).style.transform='rotateY(140deg)';
+           
+        }
+
+        document.getElementById("snake"+snake[i]).style.marginTop="-45px";
+        document.getElementById("snake"+snake[i]).style.verticalAlign="middle";
+        document.getElementById("snake"+snake[i]).style.width="100%";
+        document.getElementById("snake"+snake[i]).style.height="320px";
+    
+    }
+
+    for (let i in ladder)
+    {
+
+        var image=document.createElement('img');
+        image.src="https://cdn.pixabay.com/photo/2017/09/28/01/32/ladder-2794042_960_720.png";
+        image.id="ladder"+ladder[i];
+        document.getElementById("div"+ladder[i]).appendChild(image);
+        document.getElementById("div"+ladder[i]).style.zIndex=2;
+   
+
+        document.getElementById("ladder"+ladder[i]).style.marginTop="-260px";
+        document.getElementById("ladder"+ladder[i]).style.verticalAlign="middle";
+        document.getElementById("ladder"+ladder[i]).style.width="100%";
+        document.getElementById("ladder"+ladder[i]).style.height="250px";
+    
+    }
+
+    function rollDice(){     
+       let randNo=Math.floor(Math.random() * 6) + 1;
+       document.getElementById("dice").innerHTML =randNo;
+       changeTurn(randNo,initial_flag);
+       setTimeout((()=>document.getElementById("dice").innerHTML="Roll"),600)
+    }
+
+    
+
+
+
+
+
+</script>
+
+
+
+</body>
+</html>
+
+
